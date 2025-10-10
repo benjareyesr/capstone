@@ -133,6 +133,10 @@ for t in range(p.T):
     for a in range(p.A):
         m.addConstr(ifrecarga[t,a]<=recarga[t,a])
 
+for t in range(p.Tr):
+    for a in range(p.A):
+        m.addConstr(carga[t,a]<=p.Cargamax)
+
 # tiempo de recarga
     for t in range(p.Tr):
         for a in range(p.A):
