@@ -30,6 +30,10 @@ Datos/df_all_procesado.parquet
 !Analisis_datos_con_taxi.ipynb
 !Analisis_datos.ipynb
 
+# Permite la carpeta capstone model y todo su contenido
+!capstone\ model/
+!capstone\ model/**
+
 # Permite archivos específicos
 !bdd.py
 !demanda.ipynb
