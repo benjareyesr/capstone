@@ -59,24 +59,27 @@ for i in range(p.N):
 for i in range(p.N):
     for t in range(p.Tr):
         for a in range(p.A):
-            m.addConstr(quicksum(y[i,j,t,a]+z[i,j,t,a]
-                                 for j in range(p.N))<=pos[i,t,a])
+            m.addConstr(1 + quicksum(x[j,i,ti,a]
+                                    for j in range(p.N)
+                                    for ti in range(t))-quicksum(y[j,i,ti,a]+z[j,i,ti,a]
+                                                                 for j in range(p.N)
+                                                                 for ti in range(t))>=pos[i,t,a])
             
 for j in range(p.N):
     for t in range(p.T-1):
         for a in range(p.A):
             for k in range(p.N):
                 m.addConstr(quicksum(y[i,j,ti,a]+z[i,j,ti,a]
-                                 for ti in range(t+1))+p.PosI[j][a]-quicksum(y[j,k,ti,a]+z[j,k,ti,a]
-                                                              for ti in range(t+1))<=1)
+                                    for ti in range(t+1))+p.PosI[j][a]-quicksum(y[j,k,ti,a]+z[j,k,ti,a]
+                                                                               for ti in range(t+1))<=1)
                 
 for j in range(p.N):
     for t in range(p.T-1):
         for a in range(p.A):
             for k in range(p.N):
                 m.addConstr(quicksum(y[i,j,ti,a]+z[i,j,ti,a]
-                                 for ti in range(t+1))+p.PosI[j][a]-quicksum(y[j,k,ti,a]+z[j,k,ti,a]
-                                                              for ti in range(t+1))>=0)
+                                     for ti in range(t+1))+p.PosI[j][a]-quicksum(y[j,k,ti,a]+z[j,k,ti,a]
+                                                                                for ti in range(t+1))>=0)
                 
 # no solapamiento
 
@@ -151,5 +154,4 @@ if m.status == GRB.OPTIMAL:
     for i in range(p.N):
         for t in range(p.T):
             for a in range(p.A):
-                for j in range(p.N):
-                    print(f"y[{i,j,t,a}] = {y[i,j,t,a].x}")
+                print(f"pos[{i,t,a}] = {pos[i,t,a].x}")
