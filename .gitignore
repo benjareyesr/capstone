@@ -1,0 +1,38 @@
+# Ignora todo
+*
+
+# Permite la carpeta Caso base y solo dos archivos específicos dentro de ella
+!Caso\ base/
+!Caso\ base/monitor_super_detallado_corregido.py
+!Caso\ base/simulacion_caso_base_completa.py
+
+# Permite la carpeta Datos y todo su contenido, excepto archivos muy grandes
+!Datos/
+!Datos/**
+# Excluye el archivo muy grande (>100MB)
+Datos/df_all_procesado.parquet
+
+# Permite la carpeta Distancias zonas y todo su contenido
+!Distancias\ zonas/
+!Distancias\ zonas/**
+
+# Permite la carpeta Gráficos informe 1 y todo su contenido
+!Gráficos\ informe\ 1/
+!Gráficos\ informe\ 1/**
+
+# Permite la carpeta Latex_graficos y todo su contenido
+!Latex_graficos/
+!Latex_graficos/**
+
+# Permite los archivos específicos de notebooks
+!Analisis_datos_con_taxi_sin_feriados\ copy.ipynb
+!Analisis_datos_con_taxi_sin_feriados.ipynb
+!Analisis_datos_con_taxi.ipynb
+!Analisis_datos.ipynb
+
+# Permite archivos específicos
+!bdd.py
+!demanda.ipynb
+!parametros_matrices.py
+!preparar_bd.ipynb
+!README.md
