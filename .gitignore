@@ -36,3 +36,5 @@ Datos/df_all_procesado.parquet
 !parametros_matrices.py
 !preparar_bd.ipynb
 !README.md
+# Ignorar archivos de sistema de macOS
+.DS_Store
