@@ -132,6 +132,25 @@ df_all = df_all[~df_all['date'].isin(us_holidays)]
 
 print(df_all[['year','month','tipo']].value_counts().sort_index())
 
-# Exportar a parquet
+# Exportar a parquet completo
 df_all.to_parquet("Datos/df_all_procesado.parquet", index=False)
-print("Dataset exportado a: Datos/df_all_procesado.parquet")
+print("Dataset completo exportado a: Datos/df_all_procesado.parquet")
+
+# GENERAR ARCHIVO REDUCIDO PARA GITHUB
+# Filtrar solo el día que usamos en el modelo (2024-09-15) y días cercanos para tener más datos
+fecha_objetivo = pd.to_datetime('2024-09-15').date()
+fecha_inicio = pd.to_datetime('2024-09-14').date()  # Día anterior
+fecha_fin = pd.to_datetime('2024-09-16').date()     # Día siguiente
+
+# Filtrar datos de esos 3 días
+df_reducido = df_all[df_all['date'].between(fecha_inicio, fecha_fin)].copy()
+
+print(f"\nDataset reducido:")
+print(f"Período: {fecha_inicio} a {fecha_fin}")
+print(f"Registros originales: {len(df_all):,}")
+print(f"Registros reducidos: {len(df_reducido):,}")
+print(f"Reducción: {(1 - len(df_reducido)/len(df_all))*100:.1f}%")
+
+# Exportar versión reducida para GitHub
+df_reducido.to_parquet("Datos/df_all_reducido_github.parquet", index=False)
+print("Dataset reducido exportado a: Datos/df_all_reducido_github.parquet")

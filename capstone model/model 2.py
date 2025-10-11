@@ -5,7 +5,7 @@ m = Model("modelo V1")
 # PARÁMETROS
 # -------------------------
 
-import parametros as p  
+import parametros as p 
 
 # -------------------------
 # VARIABLES
@@ -158,4 +158,6 @@ if m.status == GRB.OPTIMAL:
     for i in range(p.N):
         for t in range(p.T):
             for a in range(p.A):
-                print(f"pos[{i,t,a}] = {pos[i,t,a].x}")
+                for j in range(p.N):
+                    if y[i,j,t,a].x > 0.1:
+                        print(f"y[{i,j,t,a}] = {y[i,j,t,a].x}")

@@ -12,6 +12,9 @@
 # Excluye el archivo muy grande (>100MB)
 Datos/df_all_procesado.parquet
 
+# Ignora archivos de prueba/test
+parametros_test.py
+
 # Permite la carpeta Distancias zonas y todo su contenido
 !Distancias\ zonas/
 !Distancias\ zonas/**

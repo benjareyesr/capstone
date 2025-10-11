@@ -9,9 +9,9 @@ from parametros_matrices import (ZONAS_MANHATTAN, ZONA_A_INDICE, INDICE_A_ZONA, 
                                 MATRIZ_DISTANCIAS, MATRIZ_TIEMPOS_NORMAL, MATRIZ_TIEMPOS_PUNTA, 
                                 MATRIZ_TIEMPOS_VALLE, MATRIZ_INGRESOS)
 
-# PARÁMETROS PRINCIPALES (ALINEADOS CON CASO BASE)
-N = 67  # zonas/nodos (todas las zonas de Manhattan)
-A = 300  # cantidad de autos (igual al caso base)
+# PARÁMETROS PRINCIPALES (COMPLETOS - ALINEADOS CON CASO BASE)
+N = 67  # 67 zonas (todas las zonas de Manhattan)
+A = 300  # 300 vehículos (igual al caso base)
 
 def max_en_listas(x):
     maximo = float('-inf')  # valor inicial muy pequeño
@@ -26,14 +26,27 @@ def max_en_listas(x):
     
     return maximo 
 
-# PARÁMETROS TEMPORALES
-Tr = 96  # tiempo real (periodos de 15 minutos en un día completo)
+# PARÁMETROS TEMPORALES (COMPLETOS)
+Tr = 96  # 96 períodos = 24 horas completas (igual al caso base)
 PERIODO_SIMULACION = 15  # minutos por periodo (igual al caso base)
 
 # CARGAR DEMANDA REAL
 def cargar_demanda_real():
     """Carga la demanda real del archivo parquet y la estructura por periodos"""
-    df_all = pd.read_parquet('/Users/jmatas/Documents/capstone/Datos/df_all_procesado.parquet')
+    # Intentar cargar archivo completo primero, si no existe usar el reducido
+    archivo_completo = '/Users/jmatas/Documents/capstone/Datos/df_all_procesado.parquet'
+    archivo_reducido = '/Users/jmatas/Documents/capstone/Datos/df_all_reducido_github.parquet'
+    
+    try:
+        df_all = pd.read_parquet(archivo_completo)
+        print("Usando archivo completo: df_all_procesado.parquet")
+    except FileNotFoundError:
+        try:
+            df_all = pd.read_parquet(archivo_reducido)
+            print("Usando archivo reducido: df_all_reducido_github.parquet")
+        except FileNotFoundError:
+            raise FileNotFoundError("No se encontró ningún archivo de datos (ni completo ni reducido)")
+    
     df_all['pickup_datetime'] = pd.to_datetime(df_all['pickup_datetime'])
     
     # Porcentaje de demanda igual al caso base
@@ -43,7 +56,7 @@ def cargar_demanda_real():
     demanda = np.zeros((N, N, Tr))
     
     # Procesar por periodos (simplificado para optimización - usar un día tipo)
-    fecha_ejemplo = pd.Timestamp('2025-01-15')  # Día ejemplo
+    fecha_ejemplo = pd.Timestamp('2024-09-15')  # Día ejemplo - misma fecha del caso base
     
     for periodo in range(Tr):
         hora = (periodo * PERIODO_SIMULACION) // 60
@@ -107,14 +120,26 @@ Tij_array = generar_tiempos_por_periodo()
 # CONVERTIR ARRAYS A LISTAS DE LISTAS DE LISTAS (FORMATO REQUERIDO)
 print("Convirtiendo a formato de listas...")
 Dem = Dem_array.tolist()  # [zona_origen][zona_destino][periodo]
-Tij = Tij_array.tolist()  # [zona_origen][zona_destino][periodo]
 
-# MATRIZ DE DISTANCIAS (convertir a lista para compatibilidad)
+# Convertir Tij a enteros explícitamente
+Tij_list = Tij_array.tolist()
+Tij = []
+for i in range(len(Tij_list)):
+    zona_i = []
+    for j in range(len(Tij_list[i])):
+        periodo_j = []
+        for t in range(len(Tij_list[i][j])):
+            periodo_j.append(int(Tij_list[i][j][t]))  # Conversión explícita a entero
+        zona_i.append(periodo_j)
+    Tij.append(zona_i)
+
+# MATRIZ DE DISTANCIAS (SIMPLIFICADA PARA ZONAS SELECCIONADAS)
+# MATRIZ DE DISTANCIAS (usar matriz completa)
 Dij = MATRIZ_DISTANCIAS.tolist()
 
 # PARÁMETROS DE ESTACIONES DE CARGA (IGUAL AL CASO BASE)
 Capchg = 55  # capacidad de autos en las estaciones de carga
-Tchg = np.ceil(110 / PERIODO_SIMULACION)  # tiempo de carga en períodos (110 min = ~7 períodos)
+Tchg = int(np.ceil(110 / PERIODO_SIMULACION))  # tiempo de carga en períodos (110 min = ~7 períodos)
 
 # ESTACIONES DE CARGA EN LAS MISMAS ZONAS QUE EL CASO BASE
 ZONAS_ESTACIONES_CARGA = [87, 116, 137, 151, 128, 186]
@@ -124,13 +149,16 @@ for zona_id in ZONAS_ESTACIONES_CARGA:
         indice = ZONA_A_INDICE[zona_id]
         posCh[indice] = 1
 
-# PRECIOS Y COSTOS
+# ESTACIONES DE CARGA - Todas las zonas seleccionadas tienen estación para simplificar
+posCh = [1] * N  # Todas las zonas seleccionadas tienen estación de carga
+
+# PRECIOS Y COSTOS (SIMPLIFICADOS)
 def generar_precios_costos():
     """Genera matrices de precios y costos basadas en los datos reales"""
     precios = np.zeros((N, N, Tr))
     costos_reub = np.zeros((N, N, Tr))
     
-    # Precio base de viajes desde matriz de ingresos
+    # Precio base de viajes desde matriz de ingresos (todas las zonas)
     for i in range(N):
         for j in range(N):
             precio_base = MATRIZ_INGRESOS[i][j]
@@ -149,34 +177,30 @@ Pviaje_array, Creub_array = generar_precios_costos()
 Pviaje = Pviaje_array.tolist()  # [zona_origen][zona_destino][periodo]
 Creub = Creub_array.tolist()    # [zona_origen][zona_destino][periodo]
 
-# POSICIONES INICIALES Y CARGAS
-# Distribuir vehículos en zonas con demanda conocida (igual estrategia que caso base)
-ZONAS_DEMANDA_ALTA = [87, 116, 137, 151, 128, 186, 162, 163, 164, 68, 90, 100, 103, 107, 113, 114]
-
+# POSICIONES INICIALES Y CARGAS (SIMPLIFICADAS)
 def generar_posiciones_iniciales():
-    """Genera posiciones iniciales distribuidas en zonas de alta demanda"""
+    """Genera posiciones iniciales distribuidas equitativamente"""
     posiciones = np.zeros((N, A))
     
     # Usar misma semilla que caso base para reproducibilidad
     np.random.seed(42)
     
-    vehiculos_por_zona = A // len(ZONAS_DEMANDA_ALTA)
-    vehiculos_restantes = A % len(ZONAS_DEMANDA_ALTA)
+    # Distribuir vehículos equitativamente entre todas las zonas seleccionadas
+    vehiculos_por_zona = A // N
+    vehiculos_restantes = A % N
     
     vehiculo_actual = 0
-    for idx, zona_id in enumerate(ZONAS_DEMANDA_ALTA):
-        if zona_id in ZONA_A_INDICE:
-            i = ZONA_A_INDICE[zona_id]
-            # Asignar vehículos base
-            for _ in range(vehiculos_por_zona):
-                if vehiculo_actual < A:
-                    posiciones[i][vehiculo_actual] = 1
-                    vehiculo_actual += 1
-            
-            # Asignar vehículos restantes a las primeras zonas
-            if idx < vehiculos_restantes and vehiculo_actual < A:
+    for i in range(N):
+        # Asignar vehículos base
+        for _ in range(vehiculos_por_zona):
+            if vehiculo_actual < A:
                 posiciones[i][vehiculo_actual] = 1
                 vehiculo_actual += 1
+        
+        # Asignar vehículos restantes a las primeras zonas
+        if i < vehiculos_restantes and vehiculo_actual < A:
+            posiciones[i][vehiculo_actual] = 1
+            vehiculo_actual += 1
     
     return posiciones
 
