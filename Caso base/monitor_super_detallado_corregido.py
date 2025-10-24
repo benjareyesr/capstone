@@ -1,22 +1,22 @@
-# MONITOR ULTRA DETALLADO DE SIMULACIÓN RIDE-HAILING
+# MONITOR ULTRA DETALLADO DE SIMULACIÓN 
 # Control paso a paso con máximo detalle
 
 import sys
-sys.path.append('/Users/jmatas/Documents/capstone')
-sys.path.append('/Users/jmatas/Documents/capstone/Caso base')
+sys.path.append('../')
+sys.path.append('.')
 
 from simulacion_caso_base_completa import SimuladorRideHailing
 import datetime
 import pandas as pd
 import os
-import sys
-sys.path.append('/Users/jmatas/Documents/capstone')
 from parametros_matrices import obtener_tiempo
 
-# 🎛️ CONFIGURACIÓN ULTRA REDUCIDA PARA MÁXIMO DETALLE
-FECHA_SIMULACION = datetime.date(2024, 9, 15)  # Domingo
-PERIODOS_MAXIMOS = 96  # Solo 96 períodos = 24 horas
-AUTO_CONTINUAR = True  # Control automático para ver más períodos
+FECHA_SIMULACION = datetime.date(2024, 9, 15)
+PERIODOS_MAXIMOS = 96  # 96 períodos = 24 horas
+
+
+# Poner Flase si es que se quiere ir viendo los resultado periodo por periodo
+AUTO_CONTINUAR = True
 
 class MonitorUltraDetallado:
     def __init__(self):

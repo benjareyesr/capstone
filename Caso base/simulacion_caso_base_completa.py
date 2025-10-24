@@ -13,15 +13,15 @@ import sys
 import os
 
 # Importar las matrices de parámetros
-sys.path.append('/Users/jmatas/Documents/capstone')
+sys.path.append('../')
 from parametros_matrices import obtener_distancia, obtener_tiempo, obtener_ingreso, ZONAS_MANHATTAN, normalizar_zona
 
 # Parámetros del sistema
 NUMERO_VEHICULOS = 300  # Número de vehículos en la flota
-AUTONOMIA_VEHICULO = 350  # km
+AUTONOMIA_VEHICULO = 350 # km
 TIEMPO_RECARGA = 110  # minutos
 # NOTA: Los tiempos de viaje se obtienen directamente de las matrices según horario (valle 0-7, punta 16-20, normal resto)
-PORCENTAJE_DEMANDA = 0.05  # 5% de la demanda total - reducido pero más acción
+PORCENTAJE_DEMANDA = 0.05  # 5% de la demanda total
 COSTO_REUBICACION_MULTIPLIER = 1.25  # 25% adicional para reubicación sin pasajero
 PERIODO_SIMULACION = 15  # minutos por periodo
 
@@ -89,10 +89,7 @@ class Vehiculo:
         return distancia_a_estacion 
     
     def necesita_cargar(self) -> bool:
-        # Determina si el vehículo necesita ir a cargar
-        # UMBRAL OPTIMIZADO: P90 de distancias reales (8.0km) + 1.0km margen = 9.0km
-        # Cubre 98.5% de zonas, mantiene 10% autonomía útil (1km de 10km total)
-        UMBRAL_BATERIA_CRITICA = 9.0  # km - balance óptimo seguridad vs eficiencia
+        UMBRAL_BATERIA_CRITICA = 8.0
         return self.bateria_actual <= UMBRAL_BATERIA_CRITICA
     
     def puede_llegar_a_estacion(self, zona_estacion: int) -> bool:
@@ -274,7 +271,7 @@ class SimuladorRideHailing:
         
         # Cargar datos reales si no están cargados
         if not hasattr(self, 'df_all') or self.df_all is None:
-            self.df_all = pd.read_parquet('/Users/jmatas/Documents/capstone/Datos/df_all_procesado.parquet')
+            self.df_all = pd.read_parquet('../Datos/df_all_reducido_github.parquet')
             self.df_all['pickup_datetime'] = pd.to_datetime(self.df_all['pickup_datetime'])
         
         # Calcular hora del periodo ANTERIOR (la demanda se materializa en el periodo siguiente)
@@ -589,11 +586,11 @@ if __name__ == "__main__":
     print(f"📊 Porcentaje demanda: {PORCENTAJE_DEMANDA*100}%")
     print(f"⏱️  Periodo simulación: {PERIODO_SIMULACION} minutos")
     
-    # Inicializar simulador con datos reales
+    # Inicializar simulador con datos realess
     simulador = SimuladorRideHailing()
     
     # Ejecutar simulación de un día (96 periodos = 24 horas * 4 periodos/hora)
-    PERIODOS_TOTALES = 96  # 1 día completo
+    PERIODOS_TOTALES = 12  # 1 día completo
     kpis, estado_por_periodo = simulador.ejecutar_simulacion(fecha_simulacion, PERIODOS_TOTALES)
 
     print("\n🎯 ¡Simulación completada con datos reales!")
