@@ -1,0 +1,28 @@
+RESULTADOS MODELO DE OPTIMIZACIÓN - PRUEBA
+============================================================
+
+Valor objetivo: $33.00
+
+KPI OPERACIONALES:
+  Viajes solicitados: 14
+  Viajes atendidos: 0
+  Tasa de atención: 0.00%
+  Demanda no atendida: 7
+  Reubicaciones: 0
+
+KPI FINANCIEROS:
+  Ingresos por viajes: $0.00
+  Costos de reubicación: $0.00
+  Beneficio neto: $0.00
+  Ingresos promedio/vehículo: $0.00
+
+KPI DE EFICIENCIA:
+  Kilómetros con pasajeros: 0.00 km
+  Kilómetros de reubicación: 0.00 km
+  Kilómetros totales: 0.00 km
+  Km promedio/vehículo: 0.00 km
+  Viajes promedio/vehículo: 0.00
+
+KPI DE CARGA:
+  Eventos de carga: 20
+  Cargas promedio/vehículo: 1.00

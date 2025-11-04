@@ -1,0 +1,34 @@
+RESULTADOS MODELO OPTIMIZACIÓN - VERSIÓN INTERMEDIA
+================================================================================
+
+CONFIGURACIÓN:
+  Zonas: 10
+  Vehículos: 40
+  Períodos: 12 (3 horas)
+
+RESULTADOS:
+  Valor objetivo: $2635.03
+  Tiempo optimización: 1.07s
+
+KPI OPERACIONALES:
+  Viajes solicitados: 185
+  Viajes atendidos: 185
+  Viajes con pasajeros: 151
+  Reubicaciones: 246
+  Demanda no satisfecha: 0
+  Tasa de servicio: 100.00%
+
+KPI FINANCIEROS:
+  Ingresos totales: $2,635.03
+  Ingreso promedio/vehículo: $65.88
+  Ingreso promedio/viaje: $14.24
+
+KPI DE EFICIENCIA:
+  Utilización con pasajeros: 31.46%
+  Total movimientos: 397
+
+KPI DE DISTANCIA Y TIEMPO:
+  Distancia promedio/viaje: 4.03 km
+  Distancia total: 608.61 km
+  Tiempo promedio/viaje: 9.67 min
+  Tiempo total: 1460.70 min

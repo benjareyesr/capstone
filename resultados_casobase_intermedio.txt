@@ -1,0 +1,17 @@
+RESULTADOS CASO BASE (FIFO) - VERSIÓN INTERMEDIA
+================================================================================
+
+CONFIGURACIÓN:
+  Zonas: 10
+  Vehículos: 40
+  Períodos: 12 (3 horas)
+
+KPI:
+  Viajes solicitados: 185
+  Viajes atendidos: 115
+  Tasa de atención: 62.16%
+  Ingresos totales: $2,078.68
+  Ingresos promedio/vehículo: $51.97
+  Distancia promedio/viaje: 3.28 km
+  Distancia total: 376.79 km
+  Tiempo promedio/viaje: 6.55 min

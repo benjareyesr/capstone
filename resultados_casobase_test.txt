@@ -1,0 +1,23 @@
+RESULTADOS CASO BASE (FIFO) - PRUEBA
+============================================================
+
+KPI OPERACIONALES:
+  Viajes solicitados: 14
+  Viajes atendidos: 14
+  Tasa de atención: 100.00%
+  Viajes perdidos por batería: 0
+  Viajes perdidos por disponibilidad: 0
+
+KPI FINANCIEROS:
+  Ingresos totales: $310.70
+  Ingresos promedio/vehículo: $15.54
+
+KPI DE EFICIENCIA:
+  Kilómetros totales: 58.30 km
+  Km promedio/vehículo: 2.92 km
+  Viajes promedio/vehículo: 0.65
+
+KPI DE CARGA:
+  Eventos de carga: 0
+  Cargas promedio/vehículo: 0.00
+  Vehículos sin acceso a carga: 0
